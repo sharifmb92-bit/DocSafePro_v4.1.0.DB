@@ -25,6 +25,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+    <!-- PROMPT AUTOMÁTICO DE INSTALACIÓN PWA -->
+    <script>
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            setTimeout(() => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('DocSafe instalada correctamente.');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            }, 1000);
+        });
+    </script>
+
     <style>
         [x-cloak] { display: none !important; }
         body { background-color: #0f172a; color: #f1f5f9; font-family: system-ui, sans-serif; overflow-x: hidden; padding-top: env(safe-area-inset-top); }
@@ -998,7 +1020,6 @@
                         try {
                             const isAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
                             if (isAvailable) {
-                                // Solicitar autenticación nativa
                                 this.bloqueoDesbloqueado = true;
                                 return;
                             }
