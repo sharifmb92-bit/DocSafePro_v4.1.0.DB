@@ -1,23 +1,63 @@
 {
   "short_name": "DocSafe",
   "name": "DocSafe 4.1.0 - Bóveda Privada",
+  "description": "Bóveda privada de seguridad para almacenamiento y gestión local de documentos personales, nóminas y certificados.",
+  "id": "com.medbasha.docsafe",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "lang": "es-ES",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
-  "start_url": "./index.html",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "display": "standalone",
-  "orientation": "any",
+  "screenshots": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Pantalla Principal DocSafe"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1161/1161388.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Vista Escritorio DocSafe"
+    }
+  ],
   "share_target": {
     "action": "./index.html?shared=1",
     "method": "GET",
