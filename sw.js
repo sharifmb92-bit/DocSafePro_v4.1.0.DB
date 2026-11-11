@@ -17,6 +17,7 @@ const URLS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
+// 1. INSTALACIÓN Y CACHÉ INICIAL
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -25,6 +26,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
+// 2. ACTIVACIÓN Y LIMPIEZA DE CACHÉS ANTIGUAS
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,6 +41,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// 3. CAPTURA DE RED (REQUISITO CLAVE PARA PROMPT DE INSTALACIÓN)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
