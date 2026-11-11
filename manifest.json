@@ -20,15 +20,11 @@
   "orientation": "any",
   "share_target": {
     "action": "./index.html?shared=1",
-    "method": "POST",
-    "enctype": "multipart/form-data",
+    "method": "GET",
     "params": {
-      "files": [
-        {
-          "name": "file",
-          "accept": ["image/*", "application/pdf"]
-        }
-      ]
+      "title": "title",
+      "text": "text",
+      "url": "url"
     }
   }
 }
