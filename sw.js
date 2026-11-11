@@ -17,7 +17,6 @@ const URLS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
-// 1. INSTALACIÓN Y CACHÉ INICIAL
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -26,7 +25,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 2. ACTIVACIÓN Y LIMPIEZA DE CACHÉS ANTIGUAS
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -41,49 +39,10 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 3. CAPTURA DE ARCHIVOS COMPARTIDOS (Web Share Target)
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-
-  if (event.request.method === 'POST' && url.pathname.endsWith('index.html') && url.searchParams.has('shared')) {
-    event.respondWith((async () => {
-      const formData = await event.request.formData();
-      const file = formData.get('file');
-
-      if (file) {
-        const cache = await caches.open('docsafe-share');
-        const headers = new Headers();
-        headers.set('Content-Type', file.type);
-        headers.set('X-File-Name', encodeURIComponent(file.name));
-        
-        await cache.put('/shared-file', new Response(file, { headers }));
-      }
-
-      return Response.redirect('./index.html?shared=1', 3.3);
-    })());
-    return;
-  }
-
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);
-    })
-  );
-});
-
-// 4. NOTIFICACIONES PUSH
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow('./');
-      }
     })
   );
 });
