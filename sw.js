@@ -3,7 +3,7 @@
    Sello: medbasha
    ========================================================= */
 
-const CACHE_NAME = 'docsafe-v4-1-0';
+const CACHE_NAME = 'docsafe-v4-1-1';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -17,7 +17,6 @@ const URLS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
-// 1. INSTALACIÓN Y CACHÉ INICIAL
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -26,7 +25,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 2. ACTIVACIÓN Y LIMPIEZA DE CACHÉS ANTIGUAS
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -41,8 +39,34 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 3. CAPTURA DE RED (REQUISITO CLAVE PARA PROMPT DE INSTALACIÓN)
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Intercepta el envío POST de Android al compartir un documento
+  if (event.request.method === 'POST' && url.searchParams.has('shared')) {
+    event.respondWith(
+      (async () => {
+        try {
+          const formData = await event.request.formData();
+          const file = formData.get('file');
+          if (file) {
+            const shareCache = await caches.open('docsafe-share');
+            const headers = new Headers({
+              'Content-Type': file.type || 'application/octet-stream',
+              'X-File-Name': encodeURIComponent(file.name || 'Documento_Compartido')
+            });
+            await shareCache.put('/shared-file', new Response(file, { headers }));
+          }
+        } catch (err) {
+          console.error('Error capturando archivo compartido:', err);
+        }
+        // Redirige mediante GET para evitar el Error 405 de GitHub Pages
+        return Response.redirect('./index.html?shared=1', 303);
+      })()
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);
